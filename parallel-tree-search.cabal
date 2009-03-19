@@ -1,5 +1,5 @@
 Name:          parallel-tree-search
-Version:       0.1
+Version:       0.1.1
 Cabal-Version: >= 1.6
 Synopsis:      Parallel Tree Search
 Description:   

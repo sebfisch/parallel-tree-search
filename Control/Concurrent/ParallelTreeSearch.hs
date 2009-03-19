@@ -68,12 +68,12 @@ parSearch env xs q  =
 -- choice.
 --
 process :: SearchEnv a -> [a] -> Queue a -> IO ([a], Queue a)
-process _   xs []                 = return (xs,[])
-process env xs (None          :q) = process env xs q
-process env xs (One x         :q) = process env (x:xs) q
-process env xs (t@(Choice _ _):q) = do incThreadCounter env
-                                       forkIO (parSearch env xs [t])
-                                       return ([],q)
+process _   xs []               = return (xs,[])
+process env xs (None       : q) = process env xs q
+process env xs (One x      : q) = process env (x:xs) q
+process env xs (Choice s t : q) = do incThreadCounter env
+                                     forkIO (parSearch env xs [s])
+                                     return ([],t:q)
 
 -- auxiliary functions
 
