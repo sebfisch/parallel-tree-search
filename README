@@ -1,0 +1,6 @@
+Parallel Tree Search
+====================
+
+This Haskell library provides an implementation of parallel search
+based on the search tree provided by the package tree-monad.
+
