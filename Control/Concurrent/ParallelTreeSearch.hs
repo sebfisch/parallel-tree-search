@@ -14,7 +14,7 @@ module Control.Concurrent.ParallelTreeSearch (
 
   SearchQueue(..), SearchView(..), LIFO(..), FIFO(..), 
 
-  parallelTreeSearch
+  parallelDFS, parallelBFS, parallelTreeSearch
 
  ) where
 
@@ -83,6 +83,27 @@ instance SearchQueue FIFO
   viewQ (FIFO q)  = case Seq.viewl q of
                       Seq.EmptyL  -> EmptyQ
                       x Seq.:< xs -> x :~ FIFO xs
+
+-- |
+-- Enumerate the leaves of a search tree concurrently in depth-first
+-- order.
+-- 
+parallelDFS :: Int           -- ^ thread limit
+            -> Int           -- ^ work limit
+            -> SearchTree a  -- ^ tree to search
+            -> IO [a]
+parallelDFS tl wl t = parallelTreeSearch tl wl (LIFO [t])
+
+-- |
+-- Enumerate the leaves of a search tree concurrently in breadth-first
+-- order.
+-- 
+parallelBFS :: Int           -- ^ thread limit
+            -> Int           -- ^ work limit
+            -> SearchTree a  -- ^ tree to search
+            -> IO [a]
+parallelBFS tl wl t = parallelTreeSearch tl wl (FIFO (Seq.singleton t))
+
 
 -- |
 -- This function enumerates the results stored in the queue of
