@@ -11,7 +11,7 @@ Category:      Control, Concurrency
 License:       PublicDomain
 License-File:  LICENSE
 Author:        Fabian Reck, Sebastian Fischer
-Maintainer:    sebf@informatik.uni-kiel.de
+Maintainer:    Sebastian Fischer
 Bug-Reports:   mailto:sebf@informatik.uni-kiel.de
 Homepage:      http://github.com/sebfisch/parallel-tree-search
 Build-Type:    Simple
