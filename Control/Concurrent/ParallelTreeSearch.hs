@@ -10,37 +10,15 @@
 -- This Haskell library provides an implementation of parallel search
 -- based on the search tree provided by the package tree-monad.
 -- 
-module Control.Concurrent.ParallelTreeSearch ( parallelTreeSearch ) where
+module Control.Concurrent.ParallelTreeSearch ( parSearch ) where
 
-import Control.Monad
 import Control.Monad.SearchTree
+import Control.Parallel
 
-import Control.Concurrent
-
--- | Enumerate the leaves of a @SearchTree@ in parallel.
-parallelTreeSearch :: Int           -- ^ number of threads to use
-                   -> SearchTree a  -- ^ tree to search
-                   -> IO [a]        -- ^ lazy list of leaves
-parallelTreeSearch threadCount tree =
- do ctr <- newMVar 1
-    res <- newChan
-    queue <- newChan
-    writeChan queue tree
-    sequence (replicate threadCount (forkIO (search ctr res queue)))
-    liftM (foldr (\mx xs -> maybe [] (:xs) mx) []) (getChanContents res)
-
-search :: MVar Int -> Chan (Maybe a) -> Chan (SearchTree a) -> IO ()
-search ctr res queue = process =<< readChan queue
- where
-  process None         = finished
-  process (One x)      = do writeChan res (Just x); finished
-  process (Choice l r) = do modifyMVar_ ctr (return.succ)
-                            writeChan queue l
-                            writeChan queue r
-                            search ctr res queue
-
-  finished = do count <- modifyMVar ctr ((\n -> return (n,n)).pred)
-                if count == 0 then writeChan res Nothing
-                 else search ctr res queue
-
-
+-- | Enumerate the leaves of a @SearchTree@ using parallel depth-first search.
+parSearch :: SearchTree a  -- ^ tree to search
+          -> [a]           -- ^ lazy list of leaves
+parSearch None         = []
+parSearch (One x)      = [x]
+parSearch (Choice l r) = rs `par` (parSearch l ++ rs)
+ where rs = parSearch r
