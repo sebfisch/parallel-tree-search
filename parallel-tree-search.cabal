@@ -20,7 +20,7 @@ Stability:     experimental
 Extra-Source-Files: README
 
 Library
-  Build-Depends:    base, tree-monad, containers
+  Build-Depends:    base, tree-monad, parallel
   Exposed-Modules:  Control.Concurrent.ParallelTreeSearch
   Ghc-Options:      -Wall
 
