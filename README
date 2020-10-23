@@ -1,3 +1,10 @@
+DEPRECATION NOTICE
+==================
+
+This repository is deprecated. 
+The package is now maintained in a [fork](https://github.com/nbun/tree-monad).
+Thanks to @nbun for taking over maintainership!
+
 Parallel Tree Search
 ====================
 
